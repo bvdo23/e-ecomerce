@@ -1,6 +1,9 @@
-
-
 module.exports = {
+    corsOptions: {
+        origin: '*',
+        methods: 'GET, POST, PUT, DELETE',
+        allowedHeaders: 'Content-Type, Authorization'
+    },
     database: {
         host: 'localhost',
         user: 'root',

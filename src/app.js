@@ -1,13 +1,20 @@
-
 const express = require('express');
-const userRoutes = require('../src/routes/userRoutes');
-
+const config = require('./config');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const userRouter = require('../src/routes/userRouter'); // Sửa lại đường dẫn đến tệp route người dùng
+const productRouter = require('../src/routes/productRouter'); // Sửa lại đường dẫn đến tệp route sản phẩm
 const app = express();
 
-// Sử dụng tuyến đường API cho người dùng
-app.use('/api', userRoutes);
+
+app.use(cors(config.corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/api/products', productRouter);
+app.use('/api/users', userRouter);
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
