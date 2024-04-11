@@ -1,0 +1,14 @@
+@media (max-width: 767px) {
+    .home-banner img {
+        width: 100%;
+
+    }
+}
+
+
+@media (min-width: 768px) {
+    .home-banner img {
+        width: 50%;
+
+    }
+}
