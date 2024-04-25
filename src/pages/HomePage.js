@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-
+import '../styles/homepage.css';
 import ControlledCarousel from '../components/ControlledCarousel';
+import { FormCheck } from 'react-bootstrap';
 function HomePage() {
 
     const [products, setProducts] = useState([]);
@@ -20,11 +19,36 @@ function HomePage() {
         <div className='home-page-container'>
             <Header />
             <ControlledCarousel />
+            <div className='home-container'>
+                <div className="search-filter">
+                    <div>
+                        <h5>Đánh giá</h5>
+                    </div>
+                    <div>
+                        <h5>Giá tiền</h5>
+                    </div>
+                    <div>
+                        <h5>Thương hiệu</h5>
+                        <FormCheck>VIVO</FormCheck>
+                        <FormCheck>SamSung</FormCheck>
+                        <FormCheck>Apple</FormCheck>
+                    </div>
+                </div>
+                <div className="product-list">
+                    {products.map(product => (
+                        <div key={product.product_id} className="product">
+                            <img src={product.image_url[0]} alt={product.name} className="product-image" />
+                            <p>{product.name}</p>
+                            <p>Price: {product.price}</p>
+                            <p>Brand: {product.brand}</p>
+                        </div>
+                    ))}
+                </div>
 
+
+            </div>
         </div>
     );
 }
-// const styles = {
 
-// }
 export default HomePage;

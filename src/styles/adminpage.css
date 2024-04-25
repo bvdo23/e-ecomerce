@@ -1,0 +1,11 @@
+.admin-container {
+    background-color: rgb(255, 255, 255);
+    display: flex
+}
+
+.admin-menu {
+    width: 10%;
+    background-color: aliceblue;
+    margin-left: 5%;
+
+}
