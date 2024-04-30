@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import Header from '../components/Header';
 import '../styles/homepage.css';
 import ControlledCarousel from '../components/ControlledCarousel';
 import { FormCheck } from 'react-bootstrap';
-function HomePage() {
 
+function HomePage() {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
@@ -13,6 +14,7 @@ function HomePage() {
             .then(data => setProducts(data))
             .catch(error => console.error('Error fetching data:', error));
     }, []);
+
     console.log(products);
 
     return (
@@ -36,16 +38,18 @@ function HomePage() {
                 </div>
                 <div className="product-list">
                     {products.map(product => (
-                        <div key={product.product_id} className="product">
-                            <img src={product.image_url[0]} alt={product.name} className="product-image" />
+                        <div className="product">
+                            <Link key={product.product_id} to={`/products/${product.product_id}`}>
+                                <div >
+                                    <img src={product.image_url[0]} alt={product.name} className="product-image-home" />
+
+                                </div>
+                            </Link>
                             <p>{product.name}</p>
-                            <p>Price: {product.price}</p>
-                            <p>Brand: {product.brand}</p>
+                            <p>{product.price}</p>
                         </div>
                     ))}
                 </div>
-
-
             </div>
         </div>
     );

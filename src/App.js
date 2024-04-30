@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage.js';
 import Cart from './pages/Cart.js';
 import AdminPage from './pages/AdminPage.js';
 import EditProductPage from './pages/EditProductPage.js';
+import ProductDetail from './pages/ProductDetails.js';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route exact path="/cart" element={<Cart />} />
         <Route exact path="/admin" element={<AdminPage />} />
         <Route exact path="/edit-product/:productId" element={<EditProductPage />} />
+        <Route exact path="/products/:productId" element={<ProductDetail />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

@@ -1,0 +1,10 @@
+.product-container {
+    background-color: rgb(255, 255, 255);
+    display: flex
+}
+
+.product-image {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+}
