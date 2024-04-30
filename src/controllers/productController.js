@@ -47,8 +47,6 @@ exports.getProductById = (req, res) => {
 
         // Kiểm tra nếu image_url là null, đặt nó thành một mảng trống
         const imageUrls = product.image_url !== null ? (Array.isArray(product.image_url) ? product.image_url : [product.image_url]) : [];
-
-        // Tạo đối tượng mới chứa dữ liệu sản phẩm cùng với mảng image_urls đã xử lý
         const productWithImages = {
             product_id: product.product_id,
             name: product.name,
@@ -62,5 +60,28 @@ exports.getProductById = (req, res) => {
 
         // Trả về đối tượng sản phẩm có chứa mảng image_urls đã xử lý
         res.json(productWithImages);
+    });
+};
+exports.updateProduct = (req, res) => {
+    const productId = req.params.productId;
+    const updatedProduct = req.body;
+
+    Product.updateProduct(productId, updatedProduct, (err, result) => {
+        if (err) {
+            res.status(500).json({ error: 'Đã xảy ra lỗi khi cập nhật sản phẩm' });
+            return;
+        }
+        res.status(200).json({ message: 'Sản phẩm đã được cập nhật thành công' });
+    });
+};
+exports.createProduct = (req, res) => {
+    const newProduct = req.body;
+
+    Product.createProduct(newProduct, (err, result) => {
+        if (err) {
+            res.status(500).json({ error: 'Đã xảy ra lỗi khi tạo sản phẩm' });
+            return;
+        }
+        res.status(201).json({ message: 'Sản phẩm đã được tạo thành công' });
     });
 };

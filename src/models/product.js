@@ -20,14 +20,14 @@ class Product {
 
     static getProductById(productId, callback) {
         const query = `
-        SELECT 
-            Products.*,
-            GROUP_CONCAT(ProductImages.image_url) AS image_urls
-        FROM Products 
-        LEFT JOIN ProductImages ON Products.product_id = ProductImages.product_id
-        WHERE Products.product_id = ?
-        GROUP BY Products.product_id;
-    `;
+            SELECT 
+                Products.*,
+                GROUP_CONCAT(ProductImages.image_url) AS image_urls
+            FROM Products 
+            LEFT JOIN ProductImages ON Products.product_id = ProductImages.product_id
+            WHERE Products.product_id = ?
+            GROUP BY Products.product_id;
+        `;
         connection.query(query, [productId], (err, results) => {
             if (err) {
                 callback(err, null);
@@ -52,10 +52,16 @@ class Product {
             callback(null, productWithImages);
         });
     }
-    static updateProduct(productId, updatedProduct, callback) {
-        const { name, description, price, stock_quantity, category_id, brand, images } = updatedProduct;
 
-        // Bắt đầu một transaction
+    static updateProduct(productId, updatedProduct, callback) {
+        const { name, description, price, stock_quantity, category_id, brand, image_url } = updatedProduct;
+
+        if (!name || !description || !price || !stock_quantity || !category_id || !brand || !image_url) {
+            const errorMessage = "Thiếu thông tin bắt buộc";
+            callback(errorMessage, null);
+            return;
+        }
+
         connection.beginTransaction(async (err) => {
             if (err) {
                 callback(err, null);
@@ -63,51 +69,103 @@ class Product {
             }
 
             try {
-                // Cập nhật thông tin sản phẩm trong bảng Products
                 const updateProductQuery = `
-                UPDATE Products
-                SET name = ?, description = ?, price = ?, stock_quantity = ?, category_id = ?, brand = ?
-                WHERE product_id = ?
-            `;
+                    UPDATE Products
+                    SET name = ?, description = ?, price = ?, stock_quantity = ?, category_id = ?, brand = ?
+                    WHERE product_id = ?
+                `;
                 await connection.query(updateProductQuery, [name, description, price, stock_quantity, category_id, brand, productId]);
 
-                // Xóa các hình ảnh hiện tại của sản phẩm trong bảng ProductImages
                 const deleteImagesQuery = `
-                DELETE FROM ProductImages
-                WHERE product_id = ?
-            `;
+                    DELETE FROM ProductImages
+                    WHERE product_id = ?
+                `;
                 await connection.query(deleteImagesQuery, [productId]);
 
-                // Thêm các hình ảnh mới của sản phẩm vào bảng ProductImages
-                if (images && images.length > 0) {
+                if (image_url && image_url.length > 0) {
                     const insertImageQuery = `
-                    INSERT INTO ProductImages (product_id, image_url, is_primary, description)
-                    VALUES (?, ?, ?, ?)
-                `;
-                    for (const image of images) {
-                        await connection.query(insertImageQuery, [productId, image.image_url, image.is_primary, image.description]);
+                        INSERT INTO ProductImages (product_id, image_url)
+                        VALUES (?, ?)
+                    `;
+                    for (const imageUrl of image_url) {
+                        await connection.query(insertImageQuery, [productId, imageUrl]);
                     }
                 }
 
-                // Commit transaction
                 connection.commit((err) => {
                     if (err) {
                         connection.rollback(() => {
                             callback(err, null);
                         });
                     } else {
-                        callback(null, 'Product updated successfully');
+                        callback(null, 'Sản phẩm đã được cập nhật thành công');
                     }
                 });
             } catch (error) {
-                // Rollback transaction in case of error
                 connection.rollback(() => {
                     callback(error, null);
                 });
             }
         });
     }
+    static createProduct(newProduct, callback) {
+        const { name, description, price, stock_quantity, category_id, brand, image_url } = newProduct;
 
+        if (!name || !description || !price || !stock_quantity || !category_id || !brand || !image_url) {
+            const errorMessage = "Thiếu thông tin bắt buộc";
+            callback(errorMessage, null);
+            return;
+        }
+
+        connection.beginTransaction(async (err) => {
+            if (err) {
+                callback(err, null);
+                return;
+            }
+
+            try {
+                const createProductQuery = `
+                INSERT INTO Products (name, description, price, stock_quantity, category_id, brand)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `;
+                const createProductResult = await connection.query(createProductQuery, [name, description, price, stock_quantity, category_id, brand]);
+
+                const productId = createProductResult.insertId;
+                if (image_url && image_url.length > 0) {
+                    const insertImageQuery = `
+        INSERT INTO ProductImages (product_id, image_url)
+        VALUES (?, ?)
+    `;
+                    for (const imageUrl of image_url) {
+                        await connection.query(insertImageQuery, [productId, imageUrl]);
+                    }
+                }
+                if (image_url && image_url.length > 0) {
+                    const insertImageQuery = `
+                    INSERT INTO ProductImages (product_id, image_url)
+                    VALUES (?, ?)
+                `;
+                    for (const imageUrl of image_url) {
+                        await connection.query(insertImageQuery, [productId, imageUrl]);
+                    }
+                }
+
+                connection.commit((err) => {
+                    if (err) {
+                        connection.rollback(() => {
+                            callback(err, null);
+                        });
+                    } else {
+                        callback(null, 'Sản phẩm đã được tạo thành công');
+                    }
+                });
+            } catch (error) {
+                connection.rollback(() => {
+                    callback(error, null);
+                });
+            }
+        });
+    }
 
 
 }
