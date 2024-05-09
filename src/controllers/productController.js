@@ -85,3 +85,17 @@ exports.createProduct = (req, res) => {
         res.status(201).json({ message: 'Sản phẩm đã được tạo thành công' });
     });
 };
+
+
+exports.deleteProduct = (req, res) => {
+    const productId = req.params.productId;
+
+    Product.deleteProduct(productId, (err, result) => {
+        if (err) {
+            res.status(500).json({ error: 'Đã xảy ra lỗi khi xóa sản phẩm' });
+            return;
+        }
+        res.status(200).json({ message: 'Sản phẩm và các ảnh liên quan đã được xóa thành công' });
+    });
+};
+
