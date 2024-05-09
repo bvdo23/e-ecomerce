@@ -8,6 +8,9 @@ import Cart from './pages/Cart.js';
 import AdminPage from './pages/AdminPage.js';
 import EditProductPage from './pages/EditProductPage.js';
 import ProductDetail from './pages/ProductDetails.js';
+import AddProduct from './pages/AddProduct.js';
+import Dashboard from './pages/Dashboard.js';
+
 
 
 function App() {
@@ -21,6 +24,8 @@ function App() {
         <Route exact path="/admin" element={<AdminPage />} />
         <Route exact path="/edit-product/:productId" element={<EditProductPage />} />
         <Route exact path="/products/:productId" element={<ProductDetail />} />
+        <Route exact path="/add-products" element={<AddProduct />} />
+        <Route exact path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

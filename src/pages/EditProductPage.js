@@ -55,7 +55,7 @@ function EditProduct() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+            const response = await fetch(`http://localhost:3000/api/products/update/${productId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

@@ -3,6 +3,7 @@ import { Table, Button } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/adminpage.css';
 import { useNavigate } from 'react-router-dom';
+
 function AdminPage() {
     const [products, setProducts] = useState([]);
     const navigate = useNavigate();
@@ -24,7 +25,27 @@ function AdminPage() {
     const editProduct = (productId) => {
         alert("Editing product with ID: " + productId);
         navigate(`/edit-product/${productId}`);
+    };
 
+    const deleteProduct = async (productId) => {
+        try {
+            alert("Do you want delete product with ID: " + productId);
+            const response = await fetch(`http://localhost:3000/api/products/delete/${productId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete product');
+            }
+
+            // Remove the deleted product from the state
+            setProducts(prevProducts => prevProducts.filter(product => product.product_id !== productId));
+
+            // Product deleted successfully
+            console.log('Product deleted successfully');
+        } catch (error) {
+            console.error('Error deleting product:', error);
+        }
     };
 
     return (
@@ -33,13 +54,19 @@ function AdminPage() {
             <div className="admin-container" >
                 <div className="admin-menu">
                     <div>
-                        <h5>Sản phẩm</h5>
+                        <Button variant="light" href='admin'>
+                            <h5>Quản lý sản phẩm</h5>
+                        </Button>
                     </div>
                     <div>
-                        <h5>Xem thống kê</h5>
+                        <Button variant="light" href='dashboard'>
+                            <h5>Xem thống kê</h5>
+                        </Button>
                     </div>
                     <div>
-                        <h5>Thêm sản phẩm</h5>
+                        <Button variant="light" href='add-products'>
+                            <h5>Thêm sản phẩm</h5>
+                        </Button>
                     </div>
                 </div>
                 <div>
@@ -52,7 +79,8 @@ function AdminPage() {
                                 <th>Price</th>
                                 <th>Stock Quantity</th>
                                 <th>Brand</th>
-                                <th>Action</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,6 +93,7 @@ function AdminPage() {
                                     <td>{product.stock_quantity}</td>
                                     <td>{product.brand}</td>
                                     <td><Button variant="primary" onClick={() => editProduct(product.product_id)}>Edit</Button></td>
+                                    <td><Button variant="danger" onClick={() => deleteProduct(product.product_id)}>Delete</Button></td>
                                 </tr>
                             ))}
                         </tbody>

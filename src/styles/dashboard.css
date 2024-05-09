@@ -1,0 +1,18 @@
+.sale-label {
+    width: 100%;
+}
+
+.dashboard-container {
+    display: flex;
+}
+
+.sale-Category {
+    width: 30%;
+    height: 500px;
+    margin-left: 100px;
+}
+
+.sale-Selling {
+    width: 70%;
+    height: 500px;
+}

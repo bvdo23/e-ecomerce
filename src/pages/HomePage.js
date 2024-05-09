@@ -22,7 +22,7 @@ function HomePage() {
             <Header />
             <ControlledCarousel />
             <div className='home-container'>
-                <div className="search-filter">
+                {/* <div className="search-filter">
                     <div>
                         <h5>Đánh giá</h5>
                     </div>
@@ -35,7 +35,7 @@ function HomePage() {
                         <FormCheck>SamSung</FormCheck>
                         <FormCheck>Apple</FormCheck>
                     </div>
-                </div>
+                </div> */}
                 <div className="product-list">
                     {products.map(product => (
                         <div className="product">
