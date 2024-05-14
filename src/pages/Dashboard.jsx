@@ -47,7 +47,7 @@ function Dashboard() {
                     </div>
                 </div>
                 <div>
-                    <div className='dashboard-container'>
+                    {/* <div className='dashboard-container'>
                         <div className='sale-label'>
                             <h2>Sales Over Time</h2>
                             <Line
@@ -82,8 +82,8 @@ function Dashboard() {
 
                         </div>
 
-                    </div>
-                    <div className='sale-Selling'>
+                    </div> */}
+                    {/* <div className='sale-Selling'>
                         <h2>Top Selling Products</h2>
                         <Bar
                             data={{
@@ -95,6 +95,9 @@ function Dashboard() {
                                 }]
                             }}
                         />
+                    </div> */}
+                    <div className='powerBiDb'>
+                        <iframe title="ecomemer" width="1500" height="1000" src="https://app.powerbi.com/reportEmbed?reportId=682ffd80-4760-4bbd-b65c-bb15627b333f&autoAuth=true&embeddedDemo=true" frameborder="0" allowFullScreen="true"></iframe>
                     </div>
                 </div>
             </div>

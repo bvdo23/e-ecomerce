@@ -4,12 +4,15 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useSelector } from 'react-redux';
 
 
 
 const Header = (prop) => {
+    const cartItems = useSelector(state => state.cart.cart)
     return (
         <>
+
             <Navbar expand="lg" className="navbar-custom">
                 <Container fluid>
                     <Navbar.Brand href="/">SmartIntelligent</Navbar.Brand>

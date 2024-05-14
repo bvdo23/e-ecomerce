@@ -1,0 +1,45 @@
+/* src/styles/cartpage.css */
+
+.cart-container {
+    padding: 20px;
+    border-style: solid;
+    border-width: 0.1px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+
+
+}
+
+.cart-item p {
+    margin: 0;
+    padding: 5px;
+    flex: 1;
+}
+
+.btn-remove {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.btn-remove:hover {
+    background-color: darkred;
+}
+
+.cart-total {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.btn {
+    display: block;
+    margin: 10px 0;
+}
