@@ -1,5 +1,5 @@
-const config = require('../config');
-const mysql = require('mysql');
+const config = require('../config/config');
+const mysql = require('mysql2');
 
 // Kết nối đến cơ sở dữ liệu
 const db = mysql.createConnection(config.database);

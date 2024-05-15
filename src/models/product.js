@@ -1,5 +1,5 @@
-const mysql = require('mysql');
-const config = require('../config');
+const mysql = require('mysql2');
+const config = require('../config/config');
 const connection = mysql.createConnection(config.database);
 
 class Product {
@@ -108,7 +108,6 @@ class Product {
             }
         });
     }
-
     static createProduct(newProduct, callback) {
         const { name, description, price, stock_quantity, category_id, brand, image_url } = newProduct;
 
@@ -118,42 +117,37 @@ class Product {
             return;
         }
 
-        connection.beginTransaction((err) => {
+        connection.beginTransaction(async (err) => {
             if (err) {
                 callback(err, null);
                 return;
             }
 
-            const createProductQuery = `
-            INSERT INTO Products (name, description, price, stock_quantity, category_id, brand)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
-            connection.query(createProductQuery, [name, description, price, stock_quantity, category_id, brand], (err, createProductResult) => {
-                if (err) {
-                    connection.rollback(() => {
-                        callback(err, null);
-                    });
-                    return;
-                }
+            try {
+                const createProductQuery = `
+                INSERT INTO Products (name, description, price, stock_quantity, category_id, brand)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `;
+                const createProductResult = await connection.query(createProductQuery, [name, description, price, stock_quantity, category_id, brand]);
 
                 const productId = createProductResult.insertId;
-                console.log(productId);
-
+                if (image_url && image_url.length > 0) {
+                    const insertImageQuery = `
+        INSERT INTO ProductImages (product_id, image_url)
+        VALUES (?, ?)
+    `;
+                    for (const imageUrl of image_url) {
+                        await connection.query(insertImageQuery, [productId, imageUrl]);
+                    }
+                }
                 if (image_url && image_url.length > 0) {
                     const insertImageQuery = `
                     INSERT INTO ProductImages (product_id, image_url)
                     VALUES (?, ?)
                 `;
-                    image_url.forEach(imageUrl => {
-                        connection.query(insertImageQuery, [productId, imageUrl], (err) => {
-                            if (err) {
-                                connection.rollback(() => {
-                                    callback(err, null);
-                                });
-                                return;
-                            }
-                        });
-                    });
+                    for (const imageUrl of image_url) {
+                        await connection.query(insertImageQuery, [productId, imageUrl]);
+                    }
                 }
 
                 connection.commit((err) => {
@@ -165,34 +159,6 @@ class Product {
                         callback(null, 'Sản phẩm đã được tạo thành công');
                     }
                 });
-            });
-        });
-    }
-
-
-    static deleteProduct(productId, callback) {
-        connection.beginTransaction(async (err) => {
-            if (err) {
-                callback(err, null);
-                return;
-            }
-
-            try {
-                const deleteImagesQuery = `DELETE FROM ProductImages WHERE product_id = ?`;
-                await connection.query(deleteImagesQuery, [productId]);
-
-                const deleteProductQuery = `DELETE FROM Products WHERE product_id = ?`;
-                await connection.query(deleteProductQuery, [productId]);
-
-                connection.commit((err) => {
-                    if (err) {
-                        connection.rollback(() => {
-                            callback(err, null);
-                        });
-                    } else {
-                        callback(null, 'Sản phẩm và các ảnh liên quan đã được xóa thành công');
-                    }
-                });
             } catch (error) {
                 connection.rollback(() => {
                     callback(error, null);
@@ -200,6 +166,7 @@ class Product {
             }
         });
     }
+
 
 }
 
