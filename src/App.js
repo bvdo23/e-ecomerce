@@ -11,6 +11,7 @@ import ProductDetail from './pages/ProductDetails.jsx';
 import AddProduct from './pages/AddProduct.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import CartPage from './pages/CartPage.jsx';
+import Payment from './pages/PaymentPage.jsx';
 import store, { persistor } from './redux/store.jsx';
 import { PersistGate } from 'redux-persist/integration/react';
 
@@ -29,6 +30,7 @@ function App() {
             <Route exact path="/add-products" element={<AddProduct />} />
             <Route exact path="/dashboard" element={<Dashboard />} />
             <Route exact path="/cart" element={<CartPage />} />
+            <Route exact path="/payment" element={<Payment />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>

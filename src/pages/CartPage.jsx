@@ -1,5 +1,5 @@
 // src/components/CartPage.js
-
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
@@ -10,6 +10,7 @@ import { removeFromCart } from '../redux/cartSlice';
 function CartPage() {
     const cartItems = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     console.log(cartItems);
 
     const calculateTotal = () => {
@@ -19,6 +20,10 @@ function CartPage() {
     const handleRemoveFromCart = (productId) => {
         dispatch(removeFromCart(productId));
     };
+
+    const payment = () => {
+        navigate('/payment', { state: { amount: calculateTotal() } });
+    }
 
     return (
         <div>
@@ -44,7 +49,7 @@ function CartPage() {
                         <div className="cart-total">
                             <h3>Total: {calculateTotal()}</h3>
                         </div>
-                        <Button variant="primary" className="btn">
+                        <Button variant="primary" className="btn" onClick={payment}>
                             Proceed to Checkout
                         </Button>
                     </div>

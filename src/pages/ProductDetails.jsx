@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Carousel } from 'react-bootstrap';
 import '../styles/productdetails.css';
 import Header from '../components/Header';
@@ -10,6 +10,7 @@ function ProductDetail() {
     const [product, setProduct] = useState(null);
     const [recommendedProducts, setRecommendedProducts] = useState([]);
     const { productId } = useParams();
+    const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
     const dispatch = useDispatch();
     const cartItems = useSelector(state => state.cart.items);
@@ -46,6 +47,9 @@ function ProductDetail() {
             console.log('Cart Items:', cartItems);
         }
     };
+    const payment = () => {
+        navigate('/payment', { state: { amount: quantity * product.price, price: product.price, quantity } });
+    }
 
     return (
         <div>
@@ -82,7 +86,7 @@ function ProductDetail() {
                             <div>
                                 <p>Tạm tính</p>
                             </div>
-                            <Button variant="danger" className='btn_dt'>
+                            <Button variant="danger" className='btn_dt' onClick={payment}>
                                 Mua ngay
                             </Button>
                             <br />
